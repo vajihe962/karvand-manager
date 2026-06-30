@@ -1,0 +1,47 @@
+{
+    "bootcamp": {
+        "title": "karvand Python",
+        "year": "2026"
+    },
+    "karvands": [
+        {
+            "id": 1,
+            "full_name": "Sara Mahmoodi",
+            "email": "sara@gmail.com",
+            "city": "Tehran",
+            "education": {
+                "degree": "Bachelor",
+                "field": "Software Engineering"
+            },
+            "skills": [
+                {
+                    "name": "Python",
+                    "level": "intermediate",
+                    "score": 88
+                },
+                {
+                    "name": "Git",
+                    "level": "beginner",
+                    "score": 70
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "full_name": "Mina Rezaei",
+            "email": "mina.rezaei@gmail.com",
+            "city": "Shiraz",
+            "education": {
+                "degree": "Master",
+                "field": "Information Technology"
+            },
+            "skills": [
+                {
+                    "name": "Math",
+                    "level": "beginner",
+                    "score": 75
+                }
+            ]
+        }
+    ]
+}
