@@ -3,7 +3,6 @@ import json
 
 DATA_DIR = "data"
 KARVANDS_PATH = os.path.join(DATA_DIR, "karvands.json")
-# REPORT_PATH = os.path.join(DATA_DIR, "report.json")
 line = "-" * 25
 
 bootcamp_dict = {"title": "karvand Python", "year": "2026"}
@@ -141,7 +140,27 @@ def get_city():
         return city
 
 
-def add_karvand(karvands_list):
+def get_field():
+    while True:
+        field = input("Enter karvand field: ").strip()
+        if field == "":
+            print("Field cannot be empty")
+            continue
+        return field
+
+
+def get_degree():
+    while True:
+        degree = input("Enter karvand degree: ").strip()
+        if degree == "":
+            print("degree cannot be empty")
+            continue
+        return degree
+
+
+def add_karvand():
+    karvand_manager = read_file()
+    karvands_list = karvand_manager["karvands"]
     full_name = get_full_name(karvands_list)
     karvand_id = generate_id(karvands_list)
     email = get_email()
@@ -157,7 +176,9 @@ def add_karvand(karvands_list):
         "skills": skills,
     }
     karvands_list.append(karvand_dict)
-    return karvands_list
+    karvand_manager["karvands"] = karvands_list
+    save_file(karvand_manager)
+    print("Karvand added successfully")
 
 
 def show_all_karvands():
@@ -247,6 +268,99 @@ def search_karvand_by_skill():
         print("No karvand with this skill was found")
 
 
+def edit_info_karvand():
+    while True:
+        try:
+            input_karvand_id = input("Enter karvand id: ").strip()
+            if input_karvand_id == "":
+                print("Karvand id cannot be empty")
+                continue
+            input_karvand_id = int(input_karvand_id)
+            break
+        except ValueError:
+            print("Invalid input! Please enter an integer number")
+
+    karvand_manager = read_file()
+    karvands = karvand_manager["karvands"]
+    for karvand in karvands:
+        if karvand["id"] == input_karvand_id:
+            print(
+                f"{line}\nKarvand information\n{line}\n"
+                f"karvand id: {karvand['id']}\n"
+                f"full name: {karvand['full_name']}\n"
+                f"email: {karvand['email']}\n"
+                f"city: {karvand['city']}\n"
+                f"education degree: {karvand['education']['degree']}\n"
+                f"education field: {karvand['education']['field']}"
+            )
+            msg = input("""Which one do you want to edit?
+choice 1-2-3-4-5
+  1- email
+  2- city
+  3- education degree
+  4- education field
+  5- exit
+    """).strip()
+            if msg == "1":
+                new_email = get_email()
+                karvand["email"] = new_email
+                save_file(karvand_manager)
+                print("Email successfully edited")
+
+            elif msg == "2":
+                new_city = get_city()
+                karvand["city"] = new_city
+                save_file(karvand_manager)
+                print("City successfully edited")
+
+            elif msg == "3":
+                new_degree = get_degree()
+                karvand["education"]["degree"] = new_degree
+                save_file(karvand_manager)
+                print("Education degree successfully edited")
+
+            elif msg == "4":
+                new_field = get_field()
+                karvand["education"]["field"] = new_field
+                save_file(karvand_manager)
+                print("Education field successfully edited")
+
+            elif msg == "5":
+                return
+
+            else:
+                print("Invalid choice!")
+                return
+
+            return
+    else:
+        print("No karvand with this id was found")
+
+
+def delete_karvand():
+    while True:
+        try:
+            input_karvand_id = input("Enter karvand id: ").strip()
+            if input_karvand_id == "":
+                print("Karvand id cannot be empty")
+                continue
+            input_karvand_id = int(input_karvand_id)
+            break
+        except ValueError:
+            print("Invalid input! Please enter an integer number")
+
+    karvand_manager = read_file()
+    karvands = karvand_manager["karvands"]
+    for karvand in karvands:
+        if karvand["id"] == input_karvand_id:
+            karvands.remove(karvand)
+            save_file(karvand_manager)
+            print("Karvand deleted successfully")
+            return
+    else:
+        print("No karvand with this id was found")
+
+
 karvand_manager = read_file()
 karvands_list = karvand_manager["karvands"]
 
@@ -261,15 +375,12 @@ while running:
 4- Search karvand by skill
 5- Edit info karvand
 6- Delete karvand
-7- Report
-8- Exit
+7- Exit
 ---------------------------\n""").lower().strip()
 
     if msg in ["1", "add", "a", "add karvand", "1- add karvand"]:
-        karvands_list = add_karvand(karvands_list)
-        karvand_manager["karvands"] = karvands_list
-        save_file(karvand_manager)
-        print("Karvand added successfully")
+        add_karvand()
+
     elif msg in [
         "2",
         "sh",
@@ -297,14 +408,24 @@ while running:
         "4- search by skill",
     ]:
         search_karvand_by_skill()
-    elif msg == "5":
-        print("Coming soon...")
-    elif msg == "6":
-        print("Coming soon...")
-    elif msg == "7":
-        print("Coming soon...")
-    elif msg in ["8", "e", "exit", "8- exit"]:
+
+    elif msg in [
+        "5",
+        "edit",
+        "edit info",
+        "edit info karvand",
+        "5- edit info karvand",
+        "edit info karvand",
+        "5- edit info",
+    ]:
+        edit_info_karvand()
+
+    elif msg in ["6", "d", "delete", "delete karvand", "6- delete karvand"]:
+        delete_karvand()
+
+    elif msg in ["7", "e", "exit", "7- exit"]:
         print("Program closed. Goodbye!")
         running = False
+
     else:
         print("Invalid choice!")
