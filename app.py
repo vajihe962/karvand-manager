@@ -186,6 +186,67 @@ def show_all_karvands():
         print("Karvand has not been added!")
 
 
+def search_karvand_by_id():
+    while True:
+        try:
+            input_karvand_id = input("Enter karvand id: ").strip()
+            if input_karvand_id == "":
+                print("Karvand id cannot be empty")
+                continue
+            input_karvand_id = int(input_karvand_id)
+            break
+        except ValueError:
+            print("Invalid input! Please enter an integer number")
+
+    karvand_manager = read_file()
+    karvands = karvand_manager["karvands"]
+    for karvand in karvands:
+        if karvand["id"] == input_karvand_id:
+            print(
+                f"{line}\nKarvand information\n{line}\n"
+                f"karvand id: {karvand['id']}\n"
+                f"full name: {karvand['full_name']}\n"
+                f"email: {karvand['email']}\n"
+                f"city: {karvand['city']}\n"
+                f"education degree: {karvand['education']['degree']}\n"
+                f"education field: {karvand['education']['field']}"
+            )
+            skill_counter = 0
+            for skill in karvand["skills"]:
+                skill_counter += 1
+                print(
+                    f"{line}\nSKILL {skill_counter}\nskill name: {skill['name']}\nskill level: {skill['level']}\nskill score: {skill['score']}\n"
+                )
+            break
+    else:
+        print("No karvand with this id was found")
+
+
+def search_karvand_by_skill():
+    while True:
+        input_skill = input("Enter skill: ").strip()
+        if input_skill == "":
+            print("skill cannot be empty")
+            continue
+        break
+
+    found_karvand = False
+    karvand_manager = read_file()
+    karvands = karvand_manager["karvands"]
+
+    for karvand in karvands:
+        for skill in karvand["skills"]:
+            if input_skill.lower() == skill["name"].lower():
+                print(
+                    f"karvand id: {karvand['id']} --> "
+                    f"full name: {karvand['full_name']}\n"
+                )
+                found_karvand = True
+
+    if not found_karvand:
+        print("No karvand with this skill was found")
+
+
 karvand_manager = read_file()
 karvands_list = karvand_manager["karvands"]
 
@@ -220,10 +281,22 @@ while running:
     ]:
         show_all_karvands()
 
-    elif msg == "3":
-        print("Coming soon...")
-    elif msg == "4":
-        print("Coming soon...")
+    elif msg in [
+        "3",
+        "search by karvand id",
+        "3- search karvand by id",
+        "search by id",
+        "3- search by id",
+    ]:
+        search_karvand_by_id()
+    elif msg in [
+        "4",
+        "search karvand by skill",
+        "4- search karvand by skill",
+        "search by skill",
+        "4- search by skill",
+    ]:
+        search_karvand_by_skill()
     elif msg == "5":
         print("Coming soon...")
     elif msg == "6":
